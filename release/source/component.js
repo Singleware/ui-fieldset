@@ -25,7 +25,7 @@ let Component = class Component extends Control.Component {
         /**
          * Element instance.
          */
-        this.skeleton = JSX.create("sw-fieldset", Object.assign({}, this.properties.class), this.children);
+        this.skeleton = (JSX.create("swe-fieldset", { class: this.properties.class, slot: this.properties.slot, type: this.properties.type, name: this.properties.name, value: this.properties.value, unwind: this.properties.unwind, required: this.properties.required, readOnly: this.properties.readOnly, disabled: this.properties.disabled, orientation: this.properties.orientation, onChange: this.properties.onChange }, this.children));
     }
     /**
      * Gets the element.
@@ -34,10 +34,22 @@ let Component = class Component extends Control.Component {
         return this.skeleton;
     }
     /**
-     * Gets the empty state.
+     * Gets the empty state of the element.
      */
     get empty() {
         return this.skeleton.empty;
+    }
+    /**
+     * Gets the element type.
+     */
+    get type() {
+        return this.skeleton.type;
+    }
+    /**
+     * Sets the element type.
+     */
+    set type(type) {
+        this.skeleton.type = type;
     }
     /**
      * Gets the element name.
@@ -52,74 +64,92 @@ let Component = class Component extends Control.Component {
         this.skeleton.name = name;
     }
     /**
-     * Gets the component value.
+     * Gets the element value.
      */
     get value() {
         return this.skeleton.value;
     }
     /**
-     * Sets the component value.
+     * Sets the element value.
      */
     set value(value) {
         this.skeleton.value = value;
     }
     /**
-     * Gets the unwind state.
+     * Gets the unwind state of the element.
      */
     get unwind() {
         return this.skeleton.unwind;
     }
     /**
-     * Sets the unwind state.
+     * Sets the unwind state of the element.
      */
     set unwind(state) {
         this.skeleton.unwind = state;
     }
     /**
-     * Gets the required state.
+     * Gets the required state of the element.
      */
     get required() {
         return this.skeleton.required;
     }
     /**
-     * Sets the required state.
+     * Sets the required state of the element.
      */
     set required(state) {
         this.skeleton.required = state;
     }
     /**
-     * Gets the read-only state.
+     * Gets the read-only state of the element.
      */
     get readOnly() {
         return this.skeleton.readOnly;
     }
     /**
-     * Sets the read-only state.
+     * Sets the read-only state of the element.
      */
     set readOnly(state) {
         this.skeleton.readOnly = state;
     }
     /**
-     * Gets the disabled state.
+     * Gets the disabled state of the element.
      */
     get disabled() {
         return this.skeleton.disabled;
     }
     /**
-     * Sets the disabled state.
+     * Sets the disabled state of the element.
      */
     set disabled(state) {
         this.skeleton.disabled = state;
     }
     /**
-     * Reset all fields in the component to its initial values.
+     * Gets the element orientation.
+     */
+    get orientation() {
+        return this.skeleton.orientation;
+    }
+    /**
+     * Sets the element orientation.
+     */
+    set orientation(orientation) {
+        this.skeleton.orientation = orientation;
+    }
+    /**
+     * Move the focus to the first child that can be focused.
+     */
+    focus() {
+        this.skeleton.focus();
+    }
+    /**
+     * Reset all fields in the element to its initial values.
      */
     reset() {
         this.skeleton.reset();
     }
     /**
-     * Checks the component validity.
-     * @returns Returns true when the component is valid, false otherwise.
+     * Checks the element validity.
+     * @returns Returns true when the element is valid, false otherwise.
      */
     checkValidity() {
         return this.skeleton.checkValidity();
@@ -134,6 +164,9 @@ __decorate([
 __decorate([
     Class.Public()
 ], Component.prototype, "empty", null);
+__decorate([
+    Class.Public()
+], Component.prototype, "type", null);
 __decorate([
     Class.Public()
 ], Component.prototype, "name", null);
@@ -152,6 +185,12 @@ __decorate([
 __decorate([
     Class.Public()
 ], Component.prototype, "disabled", null);
+__decorate([
+    Class.Public()
+], Component.prototype, "orientation", null);
+__decorate([
+    Class.Public()
+], Component.prototype, "focus", null);
 __decorate([
     Class.Public()
 ], Component.prototype, "reset", null);

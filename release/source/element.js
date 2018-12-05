@@ -17,26 +17,12 @@ const JSX = require("@singleware/jsx");
  */
 let Element = class Element extends HTMLElement {
     /**
-     * Fieldset element.
+     * Default constructor.
      */
     constructor() {
-        super(...arguments);
-        /**
-         * Element internals.
-         */
-        this.internals = {
-            required: false,
-            readOnly: false,
-            disabled: false
-        };
-        /**
-         * Element name.
-         */
-        this.name = '';
-        /**
-         * Unwind state.
-         */
-        this.unwind = false;
+        super();
+        this.addEventListener('keyup', this.changeHandler.bind(this));
+        this.addEventListener('change', this.changeHandler.bind(this));
     }
     /**
      * Add all values from the specified child into the given entity.
@@ -45,9 +31,11 @@ let Element = class Element extends HTMLElement {
      */
     addValues(entity, child) {
         const values = child.value;
-        for (const name in values) {
-            if (values[name] !== void 0) {
-                entity[name] = values[name];
+        if (values instanceof Object) {
+            for (const name in values) {
+                if (values[name] !== void 0) {
+                    entity[name] = values[name];
+                }
             }
         }
     }
@@ -65,16 +53,36 @@ let Element = class Element extends HTMLElement {
         }
     }
     /**
-     * Defines the specified state for all children in the element.
+     * Updates the specified state in the element.
      * @param name State name.
      * @param state State value.
      */
-    defineState(name, state) {
+    updateState(name, state) {
+        if (state) {
+            this.setAttribute(name, '');
+        }
+        else {
+            this.removeAttribute(name);
+        }
+    }
+    /**
+     * Set all element's children with the the specified property.
+     * @param name Property name.
+     * @param value Property value.
+     */
+    setChildrenProperty(name, value) {
         for (const child of this.children) {
             if (name in child) {
-                child[name] = state;
+                child[name] = value;
             }
         }
+    }
+    /**
+     * Change event handler.
+     */
+    changeHandler() {
+        this.updateState('empty', this.empty);
+        this.updateState('invalid', !this.empty && !this.checkValidity());
     }
     /**
      * Determines whether the element is empty or not.
@@ -86,6 +94,30 @@ let Element = class Element extends HTMLElement {
             }
         }
         return true;
+    }
+    /**
+     * Gets the element type.
+     */
+    get type() {
+        return this.getAttribute('type') || '';
+    }
+    /**
+     * Sets the element type.
+     */
+    set type(type) {
+        this.setAttribute('type', type);
+    }
+    /**
+     * Gets the element name.
+     */
+    get name() {
+        return this.getAttribute('name') || '';
+    }
+    /**
+     * Sets the element name.
+     */
+    set name(name) {
+        this.setAttribute('name', name);
     }
     /**
      * Gets the element value.
@@ -112,46 +144,84 @@ let Element = class Element extends HTMLElement {
             if (child.unwind) {
                 child.value = value;
             }
-            else if (child.name in value) {
+            else if (value instanceof Object && value[child.name] !== void 0) {
                 child.value = value[child.name];
             }
         }
     }
     /**
-     * Gets the required state.
+     * Gets the unwind state of the element.
+     */
+    get unwind() {
+        return this.hasAttribute('unwind');
+    }
+    /**
+     * Sets the unwind state of the element.
+     */
+    set unwind(state) {
+        this.updateState('unwind', state);
+    }
+    /**
+     * Gets the required state of the element.
      */
     get required() {
-        return this.internals.required;
+        return this.hasAttribute('required');
     }
     /**
-     * Sets the required state.
+     * Sets the required state of the element.
      */
     set required(state) {
-        this.defineState('required', (this.internals.required = state));
+        this.updateState('required', state);
+        this.setChildrenProperty('required', state);
     }
     /**
-     * Gets the read-only state.
+     * Gets the read-only state of the element.
      */
     get readOnly() {
-        return this.internals.readOnly;
+        return this.hasAttribute('readonly');
     }
     /**
-     * Sets the read-only state.
+     * Sets the read-only state of the element.
      */
     set readOnly(state) {
-        this.defineState('readOnly', (this.internals.readOnly = state));
+        this.updateState('readonly', state);
+        this.setChildrenProperty('readOnly', state);
     }
     /**
-     * Gets the disabled state.
+     * Gets the disabled state of the element.
      */
     get disabled() {
-        return this.internals.disabled;
+        return this.hasAttribute('disabled');
     }
     /**
-     * Sets the disabled state.
+     * Sets the disabled state of the element.
      */
     set disabled(state) {
-        this.defineState('disabled', (this.internals.disabled = state));
+        this.updateState('disabled', state);
+        this.setChildrenProperty('disabled', state);
+    }
+    /**
+     * Gets the element orientation.
+     */
+    get orientation() {
+        return this.getAttribute('orientation') || 'column';
+    }
+    /**
+     * Sets the element orientation.
+     */
+    set orientation(orientation) {
+        this.setAttribute('orientation', orientation);
+    }
+    /**
+     * Move the focus to the first child that can be focused.
+     */
+    focus() {
+        for (const child of this.children) {
+            if (child.focus instanceof Function && !child.disabled && !child.readOnly) {
+                child.focus();
+                break;
+            }
+        }
     }
     /**
      * Reset all fields in the element to its initial values.
@@ -162,14 +232,15 @@ let Element = class Element extends HTMLElement {
                 child.reset();
             }
             else {
-                if ('value' in child && 'defaultValue' in child) {
+                if ('value' in child) {
                     child.value = child.defaultValue;
                 }
-                if ('checked' in child && 'defaultChecked' in child) {
+                if ('checked' in child) {
                     child.checked = child.defaultChecked;
                 }
             }
         }
+        this.changeHandler();
     }
     /**
      * Checks the element validity.
@@ -186,28 +257,34 @@ let Element = class Element extends HTMLElement {
 };
 __decorate([
     Class.Private()
-], Element.prototype, "internals", void 0);
-__decorate([
-    Class.Private()
 ], Element.prototype, "addValues", null);
 __decorate([
     Class.Private()
 ], Element.prototype, "addValue", null);
 __decorate([
     Class.Private()
-], Element.prototype, "defineState", null);
+], Element.prototype, "updateState", null);
 __decorate([
-    Class.Public()
-], Element.prototype, "name", void 0);
+    Class.Private()
+], Element.prototype, "setChildrenProperty", null);
 __decorate([
-    Class.Public()
-], Element.prototype, "unwind", void 0);
+    Class.Private()
+], Element.prototype, "changeHandler", null);
 __decorate([
     Class.Public()
 ], Element.prototype, "empty", null);
 __decorate([
     Class.Public()
+], Element.prototype, "type", null);
+__decorate([
+    Class.Public()
+], Element.prototype, "name", null);
+__decorate([
+    Class.Public()
 ], Element.prototype, "value", null);
+__decorate([
+    Class.Public()
+], Element.prototype, "unwind", null);
 __decorate([
     Class.Public()
 ], Element.prototype, "required", null);
@@ -219,12 +296,18 @@ __decorate([
 ], Element.prototype, "disabled", null);
 __decorate([
     Class.Public()
+], Element.prototype, "orientation", null);
+__decorate([
+    Class.Public()
+], Element.prototype, "focus", null);
+__decorate([
+    Class.Public()
 ], Element.prototype, "reset", null);
 __decorate([
     Class.Public()
 ], Element.prototype, "checkValidity", null);
 Element = __decorate([
-    JSX.Describe('sw-fieldset'),
+    JSX.Describe('swe-fieldset'),
     Class.Describe()
 ], Element);
 exports.Element = Element;

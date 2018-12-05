@@ -14,9 +14,16 @@ export declare class Component<T extends Properties = Properties> extends Contro
      */
     readonly element: Element;
     /**
-     * Gets the empty state.
+     * Gets the empty state of the element.
      */
     readonly empty: boolean;
+    /**
+     * Gets the element type.
+     */
+    /**
+    * Sets the element type.
+    */
+    type: string;
     /**
      * Gets the element name.
      */
@@ -25,47 +32,58 @@ export declare class Component<T extends Properties = Properties> extends Contro
     */
     name: string;
     /**
-     * Gets the component value.
+     * Gets the element value.
      */
     /**
-    * Sets the component value.
+    * Sets the element value.
     */
     value: any;
     /**
-     * Gets the unwind state.
+     * Gets the unwind state of the element.
      */
     /**
-    * Sets the unwind state.
+    * Sets the unwind state of the element.
     */
     unwind: boolean;
     /**
-     * Gets the required state.
+     * Gets the required state of the element.
      */
     /**
-    * Sets the required state.
+    * Sets the required state of the element.
     */
     required: boolean;
     /**
-     * Gets the read-only state.
+     * Gets the read-only state of the element.
      */
     /**
-    * Sets the read-only state.
+    * Sets the read-only state of the element.
     */
     readOnly: boolean;
     /**
-     * Gets the disabled state.
+     * Gets the disabled state of the element.
      */
     /**
-    * Sets the disabled state.
+    * Sets the disabled state of the element.
     */
     disabled: boolean;
     /**
-     * Reset all fields in the component to its initial values.
+     * Gets the element orientation.
+     */
+    /**
+    * Sets the element orientation.
+    */
+    orientation: string;
+    /**
+     * Move the focus to the first child that can be focused.
+     */
+    focus(): void;
+    /**
+     * Reset all fields in the element to its initial values.
      */
     reset(): void;
     /**
-     * Checks the component validity.
-     * @returns Returns true when the component is valid, false otherwise.
+     * Checks the element validity.
+     * @returns Returns true when the element is valid, false otherwise.
      */
     checkValidity(): boolean;
 }

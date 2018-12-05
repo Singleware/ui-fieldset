@@ -18,19 +18,19 @@ const fieldset = (
   </Fieldset.Component>
 ) as Fieldset.Element;
 
-// Change the read-only property of all fiends.
+// Change the read-only property for all first-level children.
 fieldset.readOnly = true;
 
-// Change the required property of all fiends.
+// Change the required property for all first-level children.
 fieldset.required = true;
 
-// Change the disabled property of all fiends.
+// Change the disabled property for all first-level children.
 fieldset.disabled = true;
 
 // Change the fieldset name.
 fieldset.name = 'new-name';
 
-// Change the value of all fields.
+// Change the value for all first-level children.
 fieldset.value = {
   input: 'New value',
   select: '0'

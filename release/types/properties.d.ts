@@ -16,6 +16,10 @@ export interface Properties {
    */
   slot?: string;
   /**
+   * Fieldset type.
+   */
+  type?: string;
+  /**
    * Fieldset name.
    */
   name?: string;
@@ -40,7 +44,15 @@ export interface Properties {
    */
   disabled?: boolean;
   /**
+   * Fieldset orientation.
+   */
+  orientation?: string;
+  /**
    * Fieldset children.
    */
   children?: {};
+  /**
+   * Change event.
+   */
+  onChange?: (event: Event) => void;
 }

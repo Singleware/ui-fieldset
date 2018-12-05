@@ -18,7 +18,23 @@ export class Component<T extends Properties = Properties> extends Control.Compon
    * Element instance.
    */
   @Class.Private()
-  private skeleton = <sw-fieldset {...this.properties.class}>{this.children}</sw-fieldset> as Element;
+  private skeleton = (
+    <swe-fieldset
+      class={this.properties.class}
+      slot={this.properties.slot}
+      type={this.properties.type}
+      name={this.properties.name}
+      value={this.properties.value}
+      unwind={this.properties.unwind}
+      required={this.properties.required}
+      readOnly={this.properties.readOnly}
+      disabled={this.properties.disabled}
+      orientation={this.properties.orientation}
+      onChange={this.properties.onChange}
+    >
+      {this.children}
+    </swe-fieldset>
+  ) as Element;
 
   /**
    * Gets the element.
@@ -29,11 +45,26 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   }
 
   /**
-   * Gets the empty state.
+   * Gets the empty state of the element.
    */
   @Class.Public()
   public get empty(): boolean {
     return this.skeleton.empty;
+  }
+
+  /**
+   * Gets the element type.
+   */
+  @Class.Public()
+  public get type(): string {
+    return this.skeleton.type;
+  }
+
+  /**
+   * Sets the element type.
+   */
+  public set type(type: string) {
+    this.skeleton.type = type;
   }
 
   /**
@@ -52,7 +83,7 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   }
 
   /**
-   * Gets the component value.
+   * Gets the element value.
    */
   @Class.Public()
   public get value(): any {
@@ -60,14 +91,14 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   }
 
   /**
-   * Sets the component value.
+   * Sets the element value.
    */
   public set value(value: any) {
     this.skeleton.value = value;
   }
 
   /**
-   * Gets the unwind state.
+   * Gets the unwind state of the element.
    */
   @Class.Public()
   public get unwind(): boolean {
@@ -75,14 +106,14 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   }
 
   /**
-   * Sets the unwind state.
+   * Sets the unwind state of the element.
    */
   public set unwind(state: boolean) {
     this.skeleton.unwind = state;
   }
 
   /**
-   * Gets the required state.
+   * Gets the required state of the element.
    */
   @Class.Public()
   public get required(): boolean {
@@ -90,14 +121,14 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   }
 
   /**
-   * Sets the required state.
+   * Sets the required state of the element.
    */
   public set required(state: boolean) {
     this.skeleton.required = state;
   }
 
   /**
-   * Gets the read-only state.
+   * Gets the read-only state of the element.
    */
   @Class.Public()
   public get readOnly(): boolean {
@@ -105,14 +136,14 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   }
 
   /**
-   * Sets the read-only state.
+   * Sets the read-only state of the element.
    */
   public set readOnly(state: boolean) {
     this.skeleton.readOnly = state;
   }
 
   /**
-   * Gets the disabled state.
+   * Gets the disabled state of the element.
    */
   @Class.Public()
   public get disabled(): boolean {
@@ -120,14 +151,37 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   }
 
   /**
-   * Sets the disabled state.
+   * Sets the disabled state of the element.
    */
   public set disabled(state: boolean) {
     this.skeleton.disabled = state;
   }
 
   /**
-   * Reset all fields in the component to its initial values.
+   * Gets the element orientation.
+   */
+  @Class.Public()
+  public get orientation(): string {
+    return this.skeleton.orientation;
+  }
+
+  /**
+   * Sets the element orientation.
+   */
+  public set orientation(orientation: string) {
+    this.skeleton.orientation = orientation;
+  }
+
+  /**
+   * Move the focus to the first child that can be focused.
+   */
+  @Class.Public()
+  public focus(): void {
+    this.skeleton.focus();
+  }
+
+  /**
+   * Reset all fields in the element to its initial values.
    */
   @Class.Public()
   public reset(): void {
@@ -135,8 +189,8 @@ export class Component<T extends Properties = Properties> extends Control.Compon
   }
 
   /**
-   * Checks the component validity.
-   * @returns Returns true when the component is valid, false otherwise.
+   * Checks the element validity.
+   * @returns Returns true when the element is valid, false otherwise.
    */
   @Class.Public()
   public checkValidity(): boolean {

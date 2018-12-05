@@ -8,19 +8,9 @@ import * as JSX from '@singleware/jsx';
 /**
  * Fieldset element.
  */
-@JSX.Describe('sw-fieldset')
+@JSX.Describe('swe-fieldset')
 @Class.Describe()
 export class Element extends HTMLElement {
-  /**
-   * Element internals.
-   */
-  @Class.Private()
-  private internals = {
-    required: false,
-    readOnly: false,
-    disabled: false
-  };
-
   /**
    * Add all values from the specified child into the given entity.
    * @param entity Target entity.
@@ -29,9 +19,11 @@ export class Element extends HTMLElement {
   @Class.Private()
   private addValues(entity: any, child: any): void {
     const values = child.value;
-    for (const name in values) {
-      if (values[name] !== void 0) {
-        entity[name] = values[name];
+    if (values instanceof Object) {
+      for (const name in values) {
+        if (values[name] !== void 0) {
+          entity[name] = values[name];
+        }
       }
     }
   }
@@ -52,30 +44,50 @@ export class Element extends HTMLElement {
   }
 
   /**
-   * Defines the specified state for all children in the element.
+   * Updates the specified state in the element.
    * @param name State name.
    * @param state State value.
    */
   @Class.Private()
-  private defineState(name: string, state: boolean): void {
+  private updateState(name: string, state: boolean): void {
+    if (state) {
+      this.setAttribute(name, '');
+    } else {
+      this.removeAttribute(name);
+    }
+  }
+
+  /**
+   * Set all element's children with the the specified property.
+   * @param name Property name.
+   * @param value Property value.
+   */
+  @Class.Private()
+  private setChildrenProperty(name: string, value: any): void {
     for (const child of this.children as any) {
       if (name in child) {
-        child[name] = state;
+        child[name] = value;
       }
     }
   }
 
   /**
-   * Element name.
+   * Change event handler.
    */
-  @Class.Public()
-  public name: string = '';
+  @Class.Private()
+  private changeHandler(): void {
+    this.updateState('empty', this.empty);
+    this.updateState('invalid', !this.empty && !this.checkValidity());
+  }
 
   /**
-   * Unwind state.
+   * Default constructor.
    */
-  @Class.Public()
-  public unwind: boolean = false;
+  constructor() {
+    super();
+    this.addEventListener('keyup', this.changeHandler.bind(this));
+    this.addEventListener('change', this.changeHandler.bind(this));
+  }
 
   /**
    * Determines whether the element is empty or not.
@@ -88,6 +100,36 @@ export class Element extends HTMLElement {
       }
     }
     return true;
+  }
+
+  /**
+   * Gets the element type.
+   */
+  @Class.Public()
+  public get type(): string {
+    return this.getAttribute('type') || '';
+  }
+
+  /**
+   * Sets the element type.
+   */
+  public set type(type: string) {
+    this.setAttribute('type', type);
+  }
+
+  /**
+   * Gets the element name.
+   */
+  @Class.Public()
+  public get name(): string {
+    return this.getAttribute('name') || '';
+  }
+
+  /**
+   * Sets the element name.
+   */
+  public set name(name: string) {
+    this.setAttribute('name', name);
   }
 
   /**
@@ -115,55 +157,101 @@ export class Element extends HTMLElement {
     for (const child of this.children as any) {
       if (child.unwind) {
         child.value = value;
-      } else if (child.name in value) {
+      } else if (value instanceof Object && value[child.name] !== void 0) {
         child.value = value[child.name];
       }
     }
   }
 
   /**
-   * Gets the required state.
+   * Gets the unwind state of the element.
+   */
+  @Class.Public()
+  public get unwind(): boolean {
+    return this.hasAttribute('unwind');
+  }
+
+  /**
+   * Sets the unwind state of the element.
+   */
+  public set unwind(state: boolean) {
+    this.updateState('unwind', state);
+  }
+
+  /**
+   * Gets the required state of the element.
    */
   @Class.Public()
   public get required(): boolean {
-    return this.internals.required;
+    return this.hasAttribute('required');
   }
 
   /**
-   * Sets the required state.
+   * Sets the required state of the element.
    */
   public set required(state: boolean) {
-    this.defineState('required', (this.internals.required = state));
+    this.updateState('required', state);
+    this.setChildrenProperty('required', state);
   }
 
   /**
-   * Gets the read-only state.
+   * Gets the read-only state of the element.
    */
   @Class.Public()
   public get readOnly(): boolean {
-    return this.internals.readOnly;
+    return this.hasAttribute('readonly');
   }
 
   /**
-   * Sets the read-only state.
+   * Sets the read-only state of the element.
    */
   public set readOnly(state: boolean) {
-    this.defineState('readOnly', (this.internals.readOnly = state));
+    this.updateState('readonly', state);
+    this.setChildrenProperty('readOnly', state);
   }
 
   /**
-   * Gets the disabled state.
+   * Gets the disabled state of the element.
    */
   @Class.Public()
   public get disabled(): boolean {
-    return this.internals.disabled;
+    return this.hasAttribute('disabled');
   }
 
   /**
-   * Sets the disabled state.
+   * Sets the disabled state of the element.
    */
   public set disabled(state: boolean) {
-    this.defineState('disabled', (this.internals.disabled = state));
+    this.updateState('disabled', state);
+    this.setChildrenProperty('disabled', state);
+  }
+
+  /**
+   * Gets the element orientation.
+   */
+  @Class.Public()
+  public get orientation(): string {
+    return this.getAttribute('orientation') || 'column';
+  }
+
+  /**
+   * Sets the element orientation.
+   */
+  public set orientation(orientation: string) {
+    this.setAttribute('orientation', orientation);
+  }
+
+  /**
+   * Move the focus to the first child that can be focused.
+   */
+  @Class.Public()
+  public focus(): void {
+    for (const child of this.children as any) {
+      if (child.focus instanceof Function && !child.disabled && !child.readOnly) {
+        child.focus();
+        break;
+      }
+    }
   }
 
   /**
@@ -175,14 +263,15 @@ export class Element extends HTMLElement {
       if (child.reset instanceof Function) {
         child.reset();
       } else {
-        if ('value' in child && 'defaultValue' in child) {
+        if ('value' in child) {
           child.value = child.defaultValue;
         }
-        if ('checked' in child && 'defaultChecked' in child) {
+        if ('checked' in child) {
           child.checked = child.defaultChecked;
         }
       }
     }
+    this.changeHandler();
   }
 
   /**
