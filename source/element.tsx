@@ -4,13 +4,14 @@
  */
 import * as Class from '@singleware/class';
 import * as JSX from '@singleware/jsx';
+import * as Control from '@singleware/ui-control';
 
 /**
  * Fieldset element.
  */
 @JSX.Describe('swe-fieldset')
 @Class.Describe()
-export class Element extends HTMLElement {
+export class Element extends Control.Element {
   /**
    * Add all values from the specified child into the given entity.
    * @param entity Target entity.
@@ -44,40 +45,12 @@ export class Element extends HTMLElement {
   }
 
   /**
-   * Updates the specified state in the element.
-   * @param name State name.
-   * @param state State value.
-   */
-  @Class.Private()
-  private updateState(name: string, state: boolean): void {
-    if (state) {
-      this.setAttribute(name, '');
-    } else {
-      this.removeAttribute(name);
-    }
-  }
-
-  /**
-   * Set all element's children with the the specified property.
-   * @param name Property name.
-   * @param value Property value.
-   */
-  @Class.Private()
-  private setChildrenProperty(name: string, value: any): void {
-    for (const child of this.children as any) {
-      if (name in child) {
-        child[name] = value;
-      }
-    }
-  }
-
-  /**
    * Change event handler.
    */
   @Class.Private()
   private changeHandler(): void {
-    this.updateState('empty', this.empty);
-    this.updateState('invalid', !this.empty && !this.checkValidity());
+    this.updatePropertyState('empty', this.empty);
+    this.updatePropertyState('invalid', !this.empty && !this.checkValidity());
   }
 
   /**
@@ -157,8 +130,11 @@ export class Element extends HTMLElement {
     for (const child of this.children as any) {
       if (child.unwind) {
         child.value = value;
-      } else if (value instanceof Object && value[child.name] !== void 0) {
-        child.value = value[child.name];
+      } else {
+        const name = child.name;
+        if (value instanceof Object && value[name] !== void 0) {
+          child.value = value[name];
+        }
       }
     }
   }
@@ -175,7 +151,7 @@ export class Element extends HTMLElement {
    * Sets the unwind state of the element.
    */
   public set unwind(state: boolean) {
-    this.updateState('unwind', state);
+    this.updatePropertyState('unwind', state);
   }
 
   /**
@@ -190,8 +166,8 @@ export class Element extends HTMLElement {
    * Sets the required state of the element.
    */
   public set required(state: boolean) {
-    this.updateState('required', state);
-    this.setChildrenProperty('required', state);
+    this.updatePropertyState('required', state);
+    this.updateChildrenState('required', state);
   }
 
   /**
@@ -206,8 +182,8 @@ export class Element extends HTMLElement {
    * Sets the read-only state of the element.
    */
   public set readOnly(state: boolean) {
-    this.updateState('readonly', state);
-    this.setChildrenProperty('readOnly', state);
+    this.updatePropertyState('readonly', state);
+    this.updateChildrenState('readOnly', state);
   }
 
   /**
@@ -222,8 +198,8 @@ export class Element extends HTMLElement {
    * Sets the disabled state of the element.
    */
   public set disabled(state: boolean) {
-    this.updateState('disabled', state);
-    this.setChildrenProperty('disabled', state);
+    this.updatePropertyState('disabled', state);
+    this.updateChildrenState('disabled', state);
   }
 
   /**

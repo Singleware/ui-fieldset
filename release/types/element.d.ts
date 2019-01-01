@@ -1,7 +1,8 @@
+import * as Control from '@singleware/ui-control';
 /**
  * Fieldset element.
  */
-export declare class Element extends HTMLElement {
+export declare class Element extends Control.Element {
     /**
      * Add all values from the specified child into the given entity.
      * @param entity Target entity.
@@ -14,18 +15,6 @@ export declare class Element extends HTMLElement {
      * @param child Child element.
      */
     private addValue;
-    /**
-     * Updates the specified state in the element.
-     * @param name State name.
-     * @param state State value.
-     */
-    private updateState;
-    /**
-     * Set all element's children with the the specified property.
-     * @param name Property name.
-     * @param value Property value.
-     */
-    private setChildrenProperty;
     /**
      * Change event handler.
      */

@@ -12,10 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 const Class = require("@singleware/class");
 const JSX = require("@singleware/jsx");
+const Control = require("@singleware/ui-control");
 /**
  * Fieldset element.
  */
-let Element = class Element extends HTMLElement {
+let Element = class Element extends Control.Element {
     /**
      * Default constructor.
      */
@@ -53,36 +54,11 @@ let Element = class Element extends HTMLElement {
         }
     }
     /**
-     * Updates the specified state in the element.
-     * @param name State name.
-     * @param state State value.
-     */
-    updateState(name, state) {
-        if (state) {
-            this.setAttribute(name, '');
-        }
-        else {
-            this.removeAttribute(name);
-        }
-    }
-    /**
-     * Set all element's children with the the specified property.
-     * @param name Property name.
-     * @param value Property value.
-     */
-    setChildrenProperty(name, value) {
-        for (const child of this.children) {
-            if (name in child) {
-                child[name] = value;
-            }
-        }
-    }
-    /**
      * Change event handler.
      */
     changeHandler() {
-        this.updateState('empty', this.empty);
-        this.updateState('invalid', !this.empty && !this.checkValidity());
+        this.updatePropertyState('empty', this.empty);
+        this.updatePropertyState('invalid', !this.empty && !this.checkValidity());
     }
     /**
      * Determines whether the element is empty or not.
@@ -144,8 +120,11 @@ let Element = class Element extends HTMLElement {
             if (child.unwind) {
                 child.value = value;
             }
-            else if (value instanceof Object && value[child.name] !== void 0) {
-                child.value = value[child.name];
+            else {
+                const name = child.name;
+                if (value instanceof Object && value[name] !== void 0) {
+                    child.value = value[name];
+                }
             }
         }
     }
@@ -159,7 +138,7 @@ let Element = class Element extends HTMLElement {
      * Sets the unwind state of the element.
      */
     set unwind(state) {
-        this.updateState('unwind', state);
+        this.updatePropertyState('unwind', state);
     }
     /**
      * Gets the required state of the element.
@@ -171,8 +150,8 @@ let Element = class Element extends HTMLElement {
      * Sets the required state of the element.
      */
     set required(state) {
-        this.updateState('required', state);
-        this.setChildrenProperty('required', state);
+        this.updatePropertyState('required', state);
+        this.updateChildrenState('required', state);
     }
     /**
      * Gets the read-only state of the element.
@@ -184,8 +163,8 @@ let Element = class Element extends HTMLElement {
      * Sets the read-only state of the element.
      */
     set readOnly(state) {
-        this.updateState('readonly', state);
-        this.setChildrenProperty('readOnly', state);
+        this.updatePropertyState('readonly', state);
+        this.updateChildrenState('readOnly', state);
     }
     /**
      * Gets the disabled state of the element.
@@ -197,8 +176,8 @@ let Element = class Element extends HTMLElement {
      * Sets the disabled state of the element.
      */
     set disabled(state) {
-        this.updateState('disabled', state);
-        this.setChildrenProperty('disabled', state);
+        this.updatePropertyState('disabled', state);
+        this.updateChildrenState('disabled', state);
     }
     /**
      * Gets the element orientation.
@@ -261,12 +240,6 @@ __decorate([
 __decorate([
     Class.Private()
 ], Element.prototype, "addValue", null);
-__decorate([
-    Class.Private()
-], Element.prototype, "updateState", null);
-__decorate([
-    Class.Private()
-], Element.prototype, "setChildrenProperty", null);
 __decorate([
     Class.Private()
 ], Element.prototype, "changeHandler", null);

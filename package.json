@@ -7,14 +7,14 @@
   "name": "@singleware/ui-fieldset",
   "description": "Singleware UI fieldset package.",
   "license": "MIT",
-  "version": "1.1.9",
+  "version": "1.1.11",
   "main": "release/source/index.js",
   "types": "release/types/index.d.ts",
   "keywords": [
     "fieldset",
     "ui fieldset",
     "user interface",
-    "shadow dom",
+    "custom element",
     "browser"
   ],
   "repository": {
@@ -25,9 +25,10 @@
     "node": ">=8"
   },
   "dependencies": {
-    "@singleware/class": "^1.1.14",
-    "@singleware/jsx": "^1.0.18",
-    "@singleware/ui-control": "^1.1.4"
+    "@singleware/class": "^1.1.19",
+    "@singleware/jsx": "^1.0.20",
+    "@singleware/oss": "^1.0.2",
+    "@singleware/ui-control": "^1.1.10"
   },
   "devDependencies": {
     "prettier": "^1.15.3",
