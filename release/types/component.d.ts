@@ -10,6 +10,12 @@ export declare class Component<T extends Properties = Properties> extends Contro
      */
     private skeleton;
     /**
+     * Default constructor.
+     * @param properties Initial properties.
+     * @param children Initial children.
+     */
+    constructor(properties?: T, children?: any[]);
+    /**
      * Gets the element.
      */
     readonly element: Element;
@@ -73,6 +79,13 @@ export declare class Component<T extends Properties = Properties> extends Contro
     * Sets the element orientation.
     */
     orientation: string;
+    /**
+     * Gets the element data.
+     */
+    /**
+    * Sets the element data.
+    */
+    data: DOMStringMap;
     /**
      * Move the focus to the first child that can be focused.
      */

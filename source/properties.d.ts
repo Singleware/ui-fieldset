@@ -48,6 +48,10 @@ export interface Properties {
    */
   orientation?: string;
   /**
+   * Fieldset data.
+   */
+  data?:DOMStringMap;
+  /**
    * Fieldset children.
    */
   children?: {};
