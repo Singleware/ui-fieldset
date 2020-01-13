@@ -27,7 +27,7 @@ let Component = class Component extends Control.Component {
         /**
          * Element instance.
          */
-        this.skeleton = (JSX.create("swe-fieldset", { class: this.properties.class, slot: this.properties.slot, type: this.properties.type, name: this.properties.name, value: this.properties.value, unwind: this.properties.unwind, required: this.properties.required, readOnly: this.properties.readOnly, disabled: this.properties.disabled, orientation: this.properties.orientation, onChange: this.properties.onChange }, this.children));
+        this.skeleton = (JSX.create("swe-fieldset", { class: this.properties.class, slot: this.properties.slot, type: this.properties.type, name: this.properties.name, value: this.properties.value, unwind: this.properties.unwind, required: this.properties.required, readOnly: this.properties.readOnly, disabled: this.properties.disabled, tabIndex: this.properties.tabIndex || 0, orientation: this.properties.orientation, onChange: this.properties.onChange }, this.children));
         if (this.properties.data) {
             this.data = this.properties.data;
         }

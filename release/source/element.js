@@ -196,7 +196,7 @@ let Element = class Element extends Control.Element {
      */
     focus() {
         for (const child of this.children) {
-            if (child.focus instanceof Function && !child.disabled && !child.readOnly) {
+            if (child.tabIndex >= 0 && !child.disabled && !child.readOnly) {
                 child.focus();
                 break;
             }

@@ -223,7 +223,7 @@ export class Element extends Control.Element {
   @Class.Public()
   public focus(): void {
     for (const child of this.children as any) {
-      if (child.focus instanceof Function && !child.disabled && !child.readOnly) {
+      if (child.tabIndex >= 0 && !child.disabled && !child.readOnly) {
         child.focus();
         break;
       }

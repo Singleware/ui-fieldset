@@ -44,13 +44,17 @@ export interface Properties {
    */
   disabled?: boolean;
   /**
+   * Fieldset tab index.
+   */
+  tabIndex?: number;
+  /**
    * Fieldset orientation.
    */
   orientation?: string;
   /**
    * Fieldset data.
    */
-  data?:DOMStringMap;
+  data?: DOMStringMap;
   /**
    * Fieldset children.
    */
